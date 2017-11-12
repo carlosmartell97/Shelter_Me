@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "6957183925",
+    "firebase_url": "https://shelterme-8d14d.firebaseio.com",
+    "project_id": "shelterme-8d14d",
+    "storage_bucket": "shelterme-8d14d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6957183925:android:1a6c659576587594",
+        "android_client_info": {
+          "package_name": "com.example.martell.firebase_first"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "6957183925-dj268thg6rlt3btu5s7qbk71aarh32q8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAman9SGy3LzVXB4VFsvjE4X1QaaBBKvUI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:6957183925:android:3fd306562f26e67d",
+        "android_client_info": {
+          "package_name": "com.example.shelter_me.shelter_me"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "6957183925-dj268thg6rlt3btu5s7qbk71aarh32q8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAman9SGy3LzVXB4VFsvjE4X1QaaBBKvUI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
