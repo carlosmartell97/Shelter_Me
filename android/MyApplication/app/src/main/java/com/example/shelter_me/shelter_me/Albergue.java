@@ -12,18 +12,58 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 public class Albergue extends AppCompatActivity {
     View mainView;
-    EditText usernameTextBox, passwordTextBox;
+    final DatabaseReference alberguesRef = MainActivity.database.getReference("albergues");
+    TextView acopioNombre, acopioDireccion, acopioHorarios, nivelAbastecimiento;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.albergue);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        this.acopioNombre = findViewById(R.id.acopio_nombre);
+        this.acopioDireccion = findViewById(R.id.acopioDireccion);
+        this.acopioHorarios = findViewById(R.id.acopioHorarios);
+        this.nivelAbastecimiento = findViewById(R.id.acopioAbastecimiento);
 
         this.mainView = findViewById(android.R.id.content);
 
+    }
+
+    public void acopio1(View view){
+        Log.d("->","acopio1()");
+        updateInfo("Nuestra Casa");
+    }
+
+    public void acopio2(View view){
+        Log.d("->","acopio2()");
+        updateInfo("Albergue Santa Anita");
+    }
+
+    public void updateInfo(final String acopioName){
+        alberguesRef.orderByChild("nombre").equalTo(acopioName)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot snapshot) {
+                        for (DataSnapshot child : snapshot.getChildren()) {
+                            acopioNombre.setText(child.child("nombre").getValue().toString());
+                            acopioDireccion.setText(child.child("direccion").getValue().toString());
+                            acopioHorarios.setText(child.child("horarios").getValue().toString());
+                            nivelAbastecimiento.setText(child.child("capacidad").getValue().toString());
+                        }
+                        Log.d("->","value:"+snapshot.toString());
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError firebaseError) {
+                        System.out.println("The read failed: " + firebaseError.getMessage());
+                    }
+                });
     }
 
 }

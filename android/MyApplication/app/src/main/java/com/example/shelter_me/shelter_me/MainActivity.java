@@ -20,20 +20,20 @@ import com.google.firebase.database.ValueEventListener;
 public class MainActivity extends AppCompatActivity {
     View mainView;
     EditText usernameTextBox, passwordTextBox;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    final DatabaseReference usersRef = database.getReference("users");
+    static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    final DatabaseReference usersRef = database.getReference("admins");
 
 
-    public static class User {
-        String username;
+    public static class Admin {
+        String id;
         String password;
-        public User(){}
-        public User(String username, String password){
-            this.username = username;
+        public Admin(){}
+        public Admin(String id, String password){
+            this.id = id;
             this.password = password;
         }
         public String getUsername(){
-            return this.username;
+            return this.id;
         }
         public String getPassword(){
             return this.password;
@@ -90,23 +90,23 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void register(View view){
+    /*public void register(View view){
         Snackbar.make(view, "Account created, " + usernameTextBox.getText().toString(), Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show();
-        User newUser = new User(usernameTextBox.getText().toString(),passwordTextBox.getText().toString());
-        newUser.username = usernameTextBox.getText().toString();
+        Admin newUser = new Admin(usernameTextBox.getText().toString(),passwordTextBox.getText().toString());
+        newUser.id = usernameTextBox.getText().toString();
         newUser.password = passwordTextBox.getText().toString();
         usersRef.push().setValue(newUser);
-    }
+    }*/
 
     public void login(View view){
-        usersRef.orderByChild("username").equalTo(usernameTextBox.getText().toString())
+        usersRef.orderByChild("id").equalTo(usernameTextBox.getText().toString())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         for (DataSnapshot child : snapshot.getChildren()) {
-                            Log.e("->", "======="+child.getValue(User.class).getPassword());
-                            if(child.getValue(User.class).getPassword().equals(passwordTextBox.getText().toString())){
+                            Log.e("->", "======="+child.getValue(Admin.class).getPassword());
+                            if(child.getValue(Admin.class).getPassword().equals(passwordTextBox.getText().toString())){
                                 Snackbar.make(findViewById(android.R.id.content), "LOGIN successful", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
                             } else {
