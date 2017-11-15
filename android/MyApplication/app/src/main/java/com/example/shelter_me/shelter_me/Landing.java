@@ -40,7 +40,7 @@ public class Landing extends AppCompatActivity {
     }
 
     public void change(){
-        Intent change = new Intent(Landing.this,Map.class);
+        Intent change = new Intent(Landing.this,MapsActivity.class);
         change.putExtra("type", type);
         startActivity(change);
     }

@@ -12,12 +12,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.google.android.gms.maps.*;
 
 public class Map extends AppCompatActivity {
     View mainView;
     EditText usernameTextBox, passwordTextBox;
     String type;
     TextView mapType;
+    private GoogleMap mMap;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +37,7 @@ public class Map extends AppCompatActivity {
 
         this.mapType.setText(this.type);
 
+        
 
     }
 

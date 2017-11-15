@@ -20,28 +20,28 @@ import com.google.firebase.database.ValueEventListener;
 public class Albergue extends AppCompatActivity {
     View mainView;
     final DatabaseReference alberguesRef = MainActivity.database.getReference("albergues");
-    TextView acopioNombre, acopioDireccion, acopioHorarios, nivelAbastecimiento;
+    TextView albergueNombre, albergueDireccion, albergueHorarios, albergueCapacidad;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.albergue);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        this.acopioNombre = findViewById(R.id.acopio_nombre);
-        this.acopioDireccion = findViewById(R.id.acopioDireccion);
-        this.acopioHorarios = findViewById(R.id.acopioHorarios);
-        this.nivelAbastecimiento = findViewById(R.id.acopioAbastecimiento);
+        this.albergueNombre = findViewById(R.id.albergueNombre);
+        this.albergueDireccion = findViewById(R.id.albergueDireccion);
+        this.albergueHorarios = findViewById(R.id.albergueHorarios);
+        this.albergueCapacidad = findViewById(R.id.albergueCapacidad);
 
         this.mainView = findViewById(android.R.id.content);
 
     }
 
-    public void acopio1(View view){
+    public void albergue1(View view){
         Log.d("->","acopio1()");
         updateInfo("Nuestra Casa");
     }
 
-    public void acopio2(View view){
+    public void albergue2(View view){
         Log.d("->","acopio2()");
         updateInfo("Albergue Santa Anita");
     }
@@ -52,10 +52,10 @@ public class Albergue extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         for (DataSnapshot child : snapshot.getChildren()) {
-                            acopioNombre.setText(child.child("nombre").getValue().toString());
-                            acopioDireccion.setText(child.child("direccion").getValue().toString());
-                            acopioHorarios.setText(child.child("horarios").getValue().toString());
-                            nivelAbastecimiento.setText(child.child("capacidad").getValue().toString());
+                            albergueNombre.setText(child.child("nombre").getValue().toString());
+                            albergueDireccion.setText(child.child("direccion").getValue().toString());
+                            albergueHorarios.setText(child.child("horarios").getValue().toString());
+                            albergueCapacidad.setText(child.child("capacidad").getValue().toString());
                         }
                         Log.d("->","value:"+snapshot.toString());
                     }
