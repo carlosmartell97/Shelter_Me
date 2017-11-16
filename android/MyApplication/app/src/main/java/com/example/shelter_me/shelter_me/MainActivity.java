@@ -1,5 +1,6 @@
 package com.example.shelter_me.shelter_me;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,7 +23,8 @@ public class MainActivity extends AppCompatActivity {
     EditText usernameTextBox, passwordTextBox;
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
     final DatabaseReference usersRef = database.getReference("admins");
-
+    final DatabaseReference alberguesRef = database.getReference("albergues");
+    final DatabaseReference acopiosRef = database.getReference("centros_acopio");
 
     public static class Admin {
         String id;
@@ -109,6 +111,46 @@ public class MainActivity extends AppCompatActivity {
                             if(child.getValue(Admin.class).getPassword().equals(passwordTextBox.getText().toString())){
                                 Snackbar.make(findViewById(android.R.id.content), "LOGIN successful", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
+                                alberguesRef.orderByChild("id").equalTo(usernameTextBox.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot albergues) {
+                                        if(albergues.exists()){
+                                            for (DataSnapshot albergue : albergues.getChildren()) {
+                                                Intent albergueView = new Intent(MainActivity.this, Albergue.class);
+                                                albergueView.putExtra("place",albergue.child("nombre").getValue().toString());
+                                                startActivity(albergueView);
+                                                Log.d("-->","albergues "+albergue.child("nombre").getValue().toString());
+                                            }
+                                        } else {
+                                            Log.d("->",usernameTextBox.getText().toString()+" ALBERGUE doesn't exist ");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.d("->","couldn't read");
+                                    }
+                                });
+                                acopiosRef.orderByChild("id").equalTo(usernameTextBox.getText().toString()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot acopios) {
+                                        if(acopios.exists()){
+                                            for (DataSnapshot acopio : acopios.getChildren()) {
+                                                Intent acopioView = new Intent(MainActivity.this, Acopio.class);
+                                                acopioView.putExtra("place",acopio.child("nombre").getValue().toString());
+                                                Log.d("-->","centros_acopio "+acopio.child("nombre").getValue().toString());
+                                                startActivity(acopioView);
+                                            }
+                                        } else {
+                                            Log.d("->",usernameTextBox.getText().toString()+" ACOPIO doesn't exist ");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.d("-->","couldn't read");
+                                    }
+                                });
                             } else {
                                 Snackbar.make(findViewById(android.R.id.content), "incorrect password", Snackbar.LENGTH_LONG)
                                         .setAction("Action", null).show();
