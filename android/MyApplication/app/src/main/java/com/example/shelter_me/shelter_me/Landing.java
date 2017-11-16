@@ -30,12 +30,12 @@ public class Landing extends AppCompatActivity {
     }
 
     public void acopio(View view) {
-        type = "acopio";
+        type = "centros_acopio";
         change();
     }
 
     public void albergue (View view) {
-        type = "albergue";
+        type = "albergues";
         change();
     }
 

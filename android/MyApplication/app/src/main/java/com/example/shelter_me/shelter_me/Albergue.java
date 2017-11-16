@@ -21,6 +21,7 @@ public class Albergue extends AppCompatActivity {
     View mainView;
     final DatabaseReference alberguesRef = MainActivity.database.getReference("albergues");
     TextView albergueNombre, albergueDireccion, albergueHorarios, albergueCapacidad;
+    String place;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,20 +35,11 @@ public class Albergue extends AppCompatActivity {
 
         this.mainView = findViewById(android.R.id.content);
 
-    }
+        Bundle bundle = getIntent().getExtras();
 
-    public void albergue1(View view){
-        Log.d("->","acopio1()");
-        updateInfo("Nuestra Casa");
-    }
+        this.place = bundle.getString("place");
 
-    public void albergue2(View view){
-        Log.d("->","acopio2()");
-        updateInfo("Albergue Santa Anita");
-    }
-
-    public void updateInfo(final String acopioName){
-        alberguesRef.orderByChild("nombre").equalTo(acopioName)
+        alberguesRef.orderByChild("nombre").equalTo(place)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
@@ -64,6 +56,20 @@ public class Albergue extends AppCompatActivity {
                         System.out.println("The read failed: " + firebaseError.getMessage());
                     }
                 });
+    }
+
+    public void albergue1(View view){
+        Log.d("->","acopio1()");
+        //updateInfo("Nuestra Casa");
+    }
+
+    public void albergue2(View view){
+        Log.d("->","acopio2()");
+        //updateInfo("Albergue Santa Anita");
+    }
+
+    public void updateInfo(final String acopioName){
+
     }
 
 }

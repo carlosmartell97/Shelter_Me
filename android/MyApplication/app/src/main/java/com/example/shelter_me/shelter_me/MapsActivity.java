@@ -1,9 +1,12 @@
 package com.example.shelter_me.shelter_me;
 
 import android.content.Intent;
+import android.os.Debug;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -12,14 +15,21 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-
+    DatabaseReference acopiosRef;
     private GoogleMap mMap;
     MapView mapView;
-    String type;
+    String type,place;
     TextView mapType;
+    Button info;
+    double i = 0;
 
     @Override
     protected void onDestroy() {
@@ -54,19 +64,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);*/
-
         setContentView(R.layout.map);
 
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-
+        info = findViewById(R.id.button5);
 
         Bundle bundle = getIntent().getExtras();
 
@@ -74,18 +77,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         this.mapType = findViewById(R.id.mapType);
         this.mapType.setText(this.type);
 
+        acopiosRef = MainActivity.database.getReference(this.type);
     }
 
 
-    public void info (View view) {
-        if (this.type.compareTo("acopio")==0 ) {
-            Intent change = new Intent(MapsActivity.this, Acopio.class);
-            startActivity(change);
-        }else{
-            Intent change = new Intent(MapsActivity.this, Albergue.class);
-            startActivity(change);
+    public void info(View view) {
+        if (this.type.compareTo("centros_acopio") == 0) {
+            Intent acopioView = new Intent(MapsActivity.this, Acopio.class);
+            acopioView.putExtra("place",place);
+            Log.d("-->",place);
+            startActivity(acopioView);
+        } else {
+            Intent albergueView = new Intent(MapsActivity.this, Albergue.class);
+            albergueView.putExtra("place",place);
+            Log.d("-->",place);
+            startActivity(albergueView);
         }
     }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -97,13 +106,37 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
-
         mMap = googleMap;
+        acopiosRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot child : snapshot.getChildren()) {
 
+                    Log.d("->", String.valueOf(child.child("lat").getValue()));
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(String.valueOf(child.child("lat").getValue())), Double.parseDouble(String.valueOf(child.child("lon").getValue())))).title(child.child("nombre").getValue().toString()));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(19.43, -99.13), 14));
+
+        //LatLng sydney = new LatLng(-34, 151);
+
+        googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                place = marker.getTitle();
+                info.setEnabled(true);
+                return false;
+            }
+        });
+
     }
+
+
 }

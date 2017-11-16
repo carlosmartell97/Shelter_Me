@@ -22,15 +22,14 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Acopio extends AppCompatActivity {
     View mainView;
-    EditText usernameTextBox, passwordTextBox;
     final DatabaseReference acopiosRef = MainActivity.database.getReference("centros_acopio");
-    TextView acopioNombre, acopioDireccion, acopioHorarios, nivelAbastecimiento;
+    TextView acopioNombre, acopioDireccion, acopioHorarios;
     TableLayout table;
     TableRow header;
-    TextView test,test2;
+    TextView test,test2, item, cantidad;
     TableRow entry;
-    TextView item;
-    TextView cantidad;
+    String place;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +39,11 @@ public class Acopio extends AppCompatActivity {
         entry = new TableRow(this);
         item = new TextView(this);
         cantidad = new TextView(this);
+
+        Bundle bundle = getIntent().getExtras();
+
+        this.place = bundle.getString("place");
+        Log.d("->",place);
 
         this.acopioNombre = findViewById(R.id.acopio_nombre);
         this.acopioDireccion = findViewById(R.id.acopioDireccion);
@@ -58,24 +62,8 @@ public class Acopio extends AppCompatActivity {
         this.table.addView(header);
 
         this.mainView = findViewById(android.R.id.content);
-
-    }
-
-    public void acopio1(View view){
-        Log.d("->","acopio1()");
-        updateInfo("Comida Para Todos");
-        //table.removeAllViews();
-
-    }
-
-    public void acopio2(View view){
-        Log.d("->","acopio2()");
-        updateInfo("Juntos Podemos");
-        //table.removeAllViews();
-    }
-
-    public void updateInfo(final String acopioName){
-        acopiosRef.orderByChild("nombre").equalTo(acopioName)
+        //
+        acopiosRef.orderByChild("nombre").equalTo(place)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
@@ -83,16 +71,6 @@ public class Acopio extends AppCompatActivity {
                             acopioNombre.setText(child.child("nombre").getValue().toString());
                             acopioDireccion.setText(child.child("direccion").getValue().toString());
                             acopioHorarios.setText(child.child("horarios").getValue().toString());
-                            item.setText(child.child("nivel_abastecimiento").getKey().toString());
-                            cantidad.setText(child.child("nivel_abastecimiento").getValue().toString());
-                            entry.removeAllViews();
-                            entry.addView(item);
-                            entry.addView(cantidad);
-                            table.removeAllViews();
-                            table.addView(entry);
-
-
-
 
                         }
                         Log.d("->","value:"+snapshot.toString());
@@ -102,5 +80,18 @@ public class Acopio extends AppCompatActivity {
                         System.out.println("The read failed: " + firebaseError.getMessage());
                     }
                 });
+
+    }
+
+    public void acopio1(View view){
+
+    }
+
+    public void acopio2(View view){
+
+    }
+
+    public void updateInfo(final String acopioName){
+
     }
 }
