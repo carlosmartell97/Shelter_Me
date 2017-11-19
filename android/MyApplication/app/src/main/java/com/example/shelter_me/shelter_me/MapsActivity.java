@@ -29,7 +29,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     String type,place;
     TextView mapType;
     Button info;
-    double i = 0;
 
     @Override
     protected void onDestroy() {
@@ -74,10 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bundle bundle = getIntent().getExtras();
 
         this.type = bundle.getString("type");
-        this.mapType = findViewById(R.id.mapType);
-        this.mapType.setText(this.type);
-
-        acopiosRef = MainActivity.database.getReference(this.type);
+        acopiosRef = MainActivity.database.getReference(type);
     }
 
 
@@ -111,8 +107,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 for (DataSnapshot child : snapshot.getChildren()) {
-
-                    Log.d("->", String.valueOf(child.child("lat").getValue()));
                     mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(String.valueOf(child.child("lat").getValue())), Double.parseDouble(String.valueOf(child.child("lon").getValue())))).title(child.child("nombre").getValue().toString()));
                 }
             }
@@ -132,6 +126,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public boolean onMarkerClick(Marker marker) {
                 place = marker.getTitle();
                 info.setEnabled(true);
+                info.setText("Ver: "+ place);
                 return false;
             }
         });

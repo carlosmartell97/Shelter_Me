@@ -11,17 +11,27 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-public class Albergue extends AppCompatActivity {
+public class Albergue extends AppCompatActivity implements OnMapReadyCallback {
     View mainView;
+    private GoogleMap mMap;
+    MapView mapView1;
     final DatabaseReference alberguesRef = MainActivity.database.getReference("albergues");
-    TextView albergueNombre, albergueDireccion, albergueHorarios, albergueCapacidad;
-    String place;
+    TextView albergueNombre, albergueDireccion, albergueHorarios, lugares, albergueCapacidad, codigoRes;
+    String place,cupo,ocup;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,13 +42,18 @@ public class Albergue extends AppCompatActivity {
         this.albergueDireccion = findViewById(R.id.albergueDireccion);
         this.albergueHorarios = findViewById(R.id.albergueHorarios);
         this.albergueCapacidad = findViewById(R.id.albergueCapacidad);
+        this.lugares = findViewById(R.id.numLug);
+        this.codigoRes = findViewById(R.id.codigoRes);
+
+        mapView1 = findViewById(R.id.mapView3);
+        mapView1.onCreate(savedInstanceState);
+        mapView1.getMapAsync(this);
 
         this.mainView = findViewById(android.R.id.content);
 
         Bundle bundle = getIntent().getExtras();
 
         this.place = bundle.getString("place");
-
         alberguesRef.orderByChild("nombre").equalTo(place)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -47,7 +62,10 @@ public class Albergue extends AppCompatActivity {
                             albergueNombre.setText(child.child("nombre").getValue().toString());
                             albergueDireccion.setText(child.child("direccion").getValue().toString());
                             albergueHorarios.setText(child.child("horarios").getValue().toString());
-                            albergueCapacidad.setText(child.child("capacidad").getValue().toString());
+                            ocup = child.child("ocupamiento").getValue().toString();
+                            cupo = child.child("capacidad").getValue().toString();
+                            albergueCapacidad.setText(ocup+" / "+ cupo);
+
                         }
                         Log.d("->","value:"+snapshot.toString());
                     }
@@ -58,18 +76,65 @@ public class Albergue extends AppCompatActivity {
                 });
     }
 
-    public void albergue1(View view){
-        Log.d("->","acopio1()");
-        //updateInfo("Nuestra Casa");
+
+    public void reservar(View view){
+        if (Integer.parseInt(this.ocup) + Integer.parseInt(lugares.getText().toString())> Integer.parseInt(this.cupo)){
+            Toast.makeText(this,"ocupacion maxima",Toast.LENGTH_SHORT).show();
+        }else{
+            codigoRes.setText("CODIGO: d3pUwad2ais");
+        }
     }
 
-    public void albergue2(View view){
-        Log.d("->","acopio2()");
-        //updateInfo("Albergue Santa Anita");
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.getUiSettings().setScrollGesturesEnabled(false);
+        alberguesRef.orderByChild("nombre").equalTo(place).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(String.valueOf(child.child("lat").getValue())), Double.parseDouble(String.valueOf(child.child("lon").getValue())))).title(child.child("nombre").getValue().toString()));
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(Double.parseDouble(String.valueOf(child.child("lat").getValue())), Double.parseDouble(String.valueOf(child.child("lon").getValue()))), 16));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+                System.out.println("The read failed: " + firebaseError.getMessage());
+            }
+        });
+        // Add a marker in Sydney and move the camera
+
+
+
     }
 
-    public void updateInfo(final String acopioName){
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapView1.onDestroy();
     }
 
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mapView1.onLowMemory();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView1.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView1.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mapView1.onSaveInstanceState(outState);
+    }
 }

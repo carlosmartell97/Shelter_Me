@@ -30,15 +30,7 @@ public class Map extends AppCompatActivity {
         this.mainView = findViewById(android.R.id.content);
 
         Bundle bundle = getIntent().getExtras();
-
         this.type = bundle.getString("type");
-
-        this.mapType = findViewById(R.id.mapType);
-
-        this.mapType.setText(this.type);
-
-        
-
     }
 
     public void info (View view) {
