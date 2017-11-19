@@ -24,14 +24,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
 public class Albergue extends AppCompatActivity implements OnMapReadyCallback {
     View mainView;
     private GoogleMap mMap;
     MapView mapView1;
     final DatabaseReference alberguesRef = MainActivity.database.getReference("albergues");
     TextView albergueNombre, albergueDireccion, albergueHorarios, lugares, albergueCapacidad, codigoRes;
-    String place,cupo,ocup;
-
+    String place,cupo,ocup,albergueKey;
+    int codigo, reservas;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,18 +58,23 @@ public class Albergue extends AppCompatActivity implements OnMapReadyCallback {
         Bundle bundle = getIntent().getExtras();
 
         this.place = bundle.getString("place");
+        updateAlbergueInfo();
+    }
+
+    public void updateAlbergueInfo(){
         alberguesRef.orderByChild("nombre").equalTo(place)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot snapshot) {
                         for (DataSnapshot child : snapshot.getChildren()) {
+                            albergueKey = child.getKey().toString();
+                            reservas = Integer.parseInt(child.child("reservas").getValue().toString());
                             albergueNombre.setText(child.child("nombre").getValue().toString());
                             albergueDireccion.setText(child.child("direccion").getValue().toString());
                             albergueHorarios.setText(child.child("horarios").getValue().toString());
                             ocup = child.child("ocupamiento").getValue().toString();
                             cupo = child.child("capacidad").getValue().toString();
                             albergueCapacidad.setText(ocup+" / "+ cupo);
-
                         }
                         Log.d("->","value:"+snapshot.toString());
                     }
@@ -76,12 +85,24 @@ public class Albergue extends AppCompatActivity implements OnMapReadyCallback {
                 });
     }
 
-
     public void reservar(View view){
+        if(lugares.getText().toString().equals("")){
+            return;
+        }
+        updateAlbergueInfo();
         if (Integer.parseInt(this.ocup) + Integer.parseInt(lugares.getText().toString())> Integer.parseInt(this.cupo)){
             Toast.makeText(this,"ocupacion maxima",Toast.LENGTH_SHORT).show();
         }else{
-            codigoRes.setText("CODIGO: d3pUwad2ais");
+            Random r = new Random();
+            codigo = r.nextInt(1000000 - 1) + 1;
+            codigoRes.setText("CODIGO: "+codigo);
+            Map<String, Object> codigosMap = new HashMap<String, Object>();
+            codigosMap.put(reservas+10+"-"+codigo, lugares.getText().toString());
+            Map<String, Object> albergueMap = new HashMap<String, Object>();
+            albergueMap.put("reservas", ++reservas);
+            albergueMap.put("ocupamiento",Integer.parseInt(this.ocup)+Integer.parseInt(lugares.getText().toString()));
+            alberguesRef.child(albergueKey).child("codigos").updateChildren(codigosMap);
+            alberguesRef.child(albergueKey).updateChildren(albergueMap);
         }
     }
 

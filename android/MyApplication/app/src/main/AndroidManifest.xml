@@ -58,6 +58,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".AlbergueAdmin"
+            android:label="Mi casa,tu Casa"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".Acopio"
             android:label="Mi casa,tu Casa"
             android:theme="@style/AppTheme.NoActionBar">

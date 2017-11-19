@@ -94,7 +94,6 @@ public class Acopio extends AppCompatActivity implements  OnMapReadyCallback {
                                 entry.addView(item);
                                 entry.addView(cantidad);
                                 table.addView(entry);
-
                             }
 
                         }

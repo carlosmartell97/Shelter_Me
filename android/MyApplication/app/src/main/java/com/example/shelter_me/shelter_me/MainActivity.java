@@ -60,14 +60,14 @@ public class MainActivity extends AppCompatActivity {
         this.usernameTextBox = (EditText)findViewById(R.id.usernameTextbox);
         this.passwordTextBox = (EditText)findViewById(R.id.passwordTextbox);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        //fab.setOnClickListener(new View.OnClickListener() {
+            //@Override
+            //public void onClick(View view) {
+                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        //.setAction("Action", null).show();
+            //}
+        //});
     }
 
     @Override
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
                                     public void onDataChange(DataSnapshot albergues) {
                                         if(albergues.exists()){
                                             for (DataSnapshot albergue : albergues.getChildren()) {
-                                                Intent albergueView = new Intent(MainActivity.this, Albergue.class);
+                                                Intent albergueView = new Intent(MainActivity.this, AlbergueAdmin.class);
                                                 albergueView.putExtra("place",albergue.child("nombre").getValue().toString());
                                                 startActivity(albergueView);
                                                 Log.d("-->","albergues "+albergue.child("nombre").getValue().toString());
