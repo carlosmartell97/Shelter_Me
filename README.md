@@ -2,7 +2,7 @@
 Mobile android app for finding nearby shelters and storage centers in emergency situations.
 
 ## Purpose
-The goal for this app is to help people see how occupied nearby shelters are and make a reservation for however big their group is. People can also see what items nearby storage centers are missing, so that these are taken care of.
+The goal for this app is to help people see how occupied nearby shelters are and make a reservation for however big their group is. People can also see what items nearby storage centers are missing, so that these can be taken care of.
 
 ## Overall Description
 Upon opening the app, this screen allows people to look for either shelters or storage centers:
@@ -13,7 +13,7 @@ Next, a map will display either all shelters or all storage centers. Storage cen
 <br/>
 <img src="img/centros_acopio_map.jpg" width="300"> <br/>
 <br/>
-People can see full details for any given storage center, incluiding which items they need more of:
+People can see full details for any given storage center, incluiding which items they're needing more of:
 <br/>
 <img src="img/centro_acopio_info.jpg" width="300"> <br/>
 <br/>
@@ -25,7 +25,7 @@ People can see full details for any given shelter, incluiding its capacity. They
 <br/>
 <img src="img/albergue_info.jpg" width="300"> <br/>
 <br/>
-Also, administrators can login from the welcome screen and manage the information for their shelter or storage center. Shelter administrators can see a list of all recent resevations people have made, and for how many people. When each of these reservation owners arrive and they have a reservation, they should just for their reservation code and see if it's on the list.
+Also, administrators can login from the welcome screen and manage the information for their shelter or storage center. Shelter administrators can see a list of all recent resevations people have made, and how big each group is. When each of these reservation owners arrive with a reservation, administrators should just ask for their reservation code and see if it's on the list.
 <br/>
 <img src="img/admin_albergue.jpg" width="300"> <br/>
 <br/>
